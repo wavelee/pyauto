@@ -1,32 +1,36 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+#-*- coding:UTF-8 -*- 
+
+# to test in windows cmd: u can use : python simple3.py nginx.conf.v1 nginx.conf.v2 > diff.html
+
 import difflib
 import sys
 
-try:
-    textfile1=sys.argv[1]
-    textfile2=sys.argv[2]
-except Exception,e:
-    print "Error:"+str(e)
-    print "Usage: simple3.py filename1 filename2"
-    sys.exit()
+
+def printHelpMsg():
+    ''''''
+    print("Usage: simple3.py filename1 filename2")
 
 def readfile(filename):
-    try:
-        fileHandle = open (filename, 'rb' ) 
-        text=fileHandle.read().splitlines()
-        fileHandle.close()
-        return text
-    except IOError as error:
-       print('Read file Error:'+str(error))
-       sys.exit()
-
-if textfile1=="" or textfile2=="":
-    print "Usage: simple3.py filename1 filename2"
-    sys.exit()
+    '''读取文件'''
+    with open(filename,'rt') as fileHandle:
+        return fileHandle.read().splitlines()
 
 
-text1_lines = readfile(textfile1) 
-text2_lines = readfile(textfile2) 
-
-d = difflib.HtmlDiff()
-print d.make_file(text1_lines, text2_lines)
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        printHelpMsg()
+        print(len(sys.argv))
+        sys.exit()
+    else:
+        try:
+            text1_lines = readfile(sys.argv[1]) 
+            text2_lines = readfile(sys.argv[2])   
+        except Exception as e:
+                print("Error:",str(e.args))
+                printHelpMsg()
+                sys.exit()  
+                
+        d = difflib.HtmlDiff()
+        diff = d.make_file(text1_lines,text2_lines)
+        print(diff)
